@@ -1,7 +1,6 @@
-<!-- <div class="search-container">
-  <input type="text" [(ngModel)]="searchTerm" placeholder="Search by name or email">
-  <button (click)="search()">Search</button>
-</div> -->
+
+<input class="ms-3 mt-3 " type="text" placeholder="Search" aria-label="Search" [(ngModel)]="searchStudent" (input)="screenStudents()">
+
  
 
 <div class="container">
@@ -9,25 +8,31 @@
   <div class="row">
     <div class="col-2"></div>
     <div class="col-8">
-      <table class="table ">
+      <table class="table table-hover">
         <thead>
           <tr>
             <th scope="col">Id</th>
-            <th scope="col">Name
-            </th>
+            <th scope="col">First Name</th>
+            <th scope="col">Last Name</th>
+            <th scope="col">Email</th>
+
+
+
             <th scope="col">Actions</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let s of studentsNew; let i = index">
+          <tr *ngFor="let s of screenStudent; let i = index">
             <th >{{ i + 1 }}</th>
-            <td>{{ s.firstName }}
-            {{ s.lastName }}</td>
-            <td>{{s.id}}</td>
+            <td>{{ s.firstName }}</td>
+            <td>{{ s.lastName }}</td>
+            <td>{{ s.email }}</td>
+
+            
             <td>
-              <button class="btn btn-primary btn-sm" [routerLink]="['detail', s.id]">View </button>
-              <button class="btn btn-warning btn-sm" [routerLink]="['change', s.id]">Edit</button>
-              <button class="btn btn-danger btn-sm" (click)="deleteStudent(s.id)">Delete</button>
+              <button class="btn btn-primary btn-sm me-2" [routerLink]="['detail', s.id]"><i class="fa-regular fa-eye" style="color: #74C0FC;"></i>View </button>
+              <button class="btn btn-warning btn-sm me-2" [routerLink]="['change', s.id]"><i class="fa-thin fa-pen-to-square" style="color: #c1c5cd;"></i>Edit</button>
+              <button class="btn btn-danger btn-sm me-2" (click)="deleteStudent(s.id)"><i class="fa-regular fa-trash" style="color: #dfd4d3;"></i>Delete</button>
             </td>
           </tr>
         </tbody>

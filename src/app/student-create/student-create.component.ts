@@ -36,9 +36,9 @@ export class StudentCreateComponent implements OnInit {
       previousEducation: this.fb.array([])
     });
 
-    this.registrationForm.get('email')?.valueChanges.subscribe(value => {
-      this.checkEmail(value);
-    });
+    // this.registrationForm.get('email')?.valueChanges.subscribe(value => {
+      // this.checkEmail(value);
+    // });
   }
 
   ngOnInit() {
@@ -60,16 +60,7 @@ export class StudentCreateComponent implements OnInit {
     this.previousEducation.removeAt(index);
   }
 
-  // onStateChange(event:Event) {
-  //   const selectedState = event.target.value;
-  //   if (selectedState === 'State1') {
-  //     this.cities = ['City1-1', 'City1-2'];
-  //   } else if (selectedState === 'State2') {
-  //     this.cities = ['City2-1', 'City2-2'];
-  //   } else if (selectedState === 'State3') {
-  //     this.cities = ['City3-1', 'City3-2'];
-  //   }
-  // }
+  
   dateValidator(control: AbstractControl) {
     const value = control.value;
     if (value && !/^\d{2}-\d{2}-\d{4}$/.test(value)) {
@@ -102,34 +93,20 @@ export class StudentCreateComponent implements OnInit {
     this.registrationForm.get('subjects')?.setValue(subjects);
   }
 
-  checkEmail(email: string) {
-    this.studentService.checkEmail(email).subscribe(response => {
-      this.emailTaken = response.isTaken;
-      if (this.emailTaken) {
-        this.registrationForm.get('email')?.setErrors({ emailTaken: true });
-      }
-    });
-  }
-
-  // onSubmit() {
-  //   if (this.registrationForm.valid && !this.emailTaken) {
-  //     this.studentService.registerStudent(this.registrationForm.value).subscribe(
-  //       response => {
-  //         Swal.fire('Success', 'Student registered successfully!', 'success');
-  //         this.registrationForm.reset();
-  //         this.selectedSubjects = [];
-  //         while (this.previousEducation.length) {
-  //           this.previousEducation.removeAt(0);
-  //         }
-  //       },
-  //       error => {
-  //         Swal.fire('Error', 'Failed to register student!', 'error');
-  //       }
-  //     );
-  //   }
+  // checkEmail(email: string) {
+  //   this.studentService.checkEmail(email).subscribe(response => {
+  //     this.emailTaken = response.isTaken;
+  //     if (this.emailTaken) {
+  //       this.registrationForm.get('email')?.setErrors({ emailTaken: true });
+  //     }
+  //   });
   // }
+
+  
   onSubmit() {
-    if (this.registrationForm.valid && !this.emailTaken) {
+    // if (this.registrationForm.valid && !this.emailTaken) {
+      if (this.registrationForm.valid && !this.emailTaken) {
+
       this.studentService.registerStudent(this.registrationForm.value).subscribe(
         response => {
           Swal.fire('Success', 'Student registered successfully!', 'success');

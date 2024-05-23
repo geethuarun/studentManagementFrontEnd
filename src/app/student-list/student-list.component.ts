@@ -11,7 +11,8 @@ import Swal from 'sweetalert2';
 })
 export class StudentListComponent {
   studentsNew: Student[]=[]
-  searchTerm: string = ''
+  searchStudent: string = ''
+  screenStudent:Student[]=[]
 
   constructor(private studentService: StudentService, private router: Router) { }
 
@@ -19,24 +20,34 @@ export class StudentListComponent {
     this.getStudent();
   }
 
-  getStudent(){
+getStudent(){
     this.studentService.getStudents().subscribe((students:Student[]) => {
       this.studentsNew = students;
-    });
-  // search():void{
-  //   if (this.searchTerm.trim() !== '') {
-  //     this.studentService.checkEmail(this.searchTerm).subscribe((students:Student[]) => this.studentsNew = students);
-  //   } else {
-  //     this.getStudent();
-  //   }
-  // }
+      this.screenStudent=students
+    });}
+screenStudents(){
+      if (!this.searchStudent.trim()) {
+        this.screenStudent = this.studentsNew;
+      } else {
+        const query = this.searchStudent.toLowerCase();
+        this.screenStudent = this.studentsNew.filter(
+          (student) =>
+            student.firstName.toLowerCase().includes(query) ||
+            student.lastName.toLowerCase().includes(query) ||
+            student.email.toLowerCase().includes(query)
+        );
+      }
+    }
+  
     
    
   
     // this.studentService.getStudents().subscribe(students => {
     //   this.students = students;
     // });
-  }
+  
+
+  
 
   
   // deleteStudent(id: number): void {
@@ -75,6 +86,5 @@ export class StudentListComponent {
     });
   }
   
-
 }
 

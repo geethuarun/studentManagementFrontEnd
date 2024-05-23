@@ -7,7 +7,7 @@ import { StudentCreateComponent } from './student-create/student-create.componen
 import { StudentEditComponent } from './student-edit/student-edit.component';
 import { StudentDetailComponent } from './student-detail/student-detail.component';
 import { StudentListComponent } from './student-list/student-list.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http'
 
 @NgModule({
@@ -22,7 +22,8 @@ import {HttpClientModule} from '@angular/common/http'
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule
     
   ],
   providers: [],

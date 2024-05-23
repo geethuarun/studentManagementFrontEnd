@@ -1,111 +1,131 @@
-<form [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
-    <!-- First Name -->
-    <div>
-      <label for="firstName">First Name</label>
-      <input id="firstName" formControlName="firstName">
-      <div *ngIf="registrationForm.get('firstName')?.invalid && registrationForm.get('firstName')?.touched">
-        First Name is required
-      </div>
-    </div>
-  
-    <!-- Last Name -->
-    <div>
-      <label for="lastName">Last Name</label>
-      <input id="lastName" formControlName="lastName">
-      <div *ngIf="registrationForm.get('lastName')?.invalid && registrationForm.get('lastName')?.touched">
-        Last Name is required
-      </div>
-    </div>
-  
-    <!-- Date of Birth -->
-    <div>
-      <label for="dob">Date of Birth</label>
-      <input id="dob" formControlName="dob" type="date">
-      <div *ngIf="registrationForm.get('dob')?.invalid && registrationForm.get('dob')?.touched">
-        Date of Birth is required in dd-mm-yyyy format
-      </div>
-    </div>
-  
-    <!-- Email -->
-    <div>
-      <label for="email">Email</label>
-      <input id="email" formControlName="email">
-      <div *ngIf="registrationForm.get('email')?.invalid && registrationForm.get('email')?.touched">
-        <div *ngIf="registrationForm.get('email')?.hasError('required')">Email is required</div>
-        <div *ngIf="registrationForm.get('email')?.hasError('email')">Email is invalid</div>
-        <div *ngIf="emailTaken">Email already exists</div>
-      </div>
-    </div>
-  
-    <!-- Address Group -->
-    <div formGroupName="address">
-      <label for="address">Address</label>
-      <textarea id="address" formControlName="address"></textarea>
-      <div *ngIf="registrationForm.get('address.address')?.invalid && registrationForm.get('address.address')?.touched">
-        Address is required
-      </div>
-  
-      <label for="state">State</label>
-      <select id="state" formControlName="state" (change)="onStateChange($event)">
-        <option *ngFor="let state of states" [value]="state">{{ state }}</option>
-      </select>
-      <div *ngIf="registrationForm.get('address.state')?.invalid && registrationForm.get('address.state')?.touched">
-        State is required
-      </div>
-  
-      <label for="city">City</label>
-      <select id="city" formControlName="city">
-        <option *ngFor="let city of cities" [value]="city">{{ city }}</option>
-      </select>
-      <div *ngIf="registrationForm.get('address.city')?.invalid && registrationForm.get('address.city')?.touched">
-        City is required
-      </div>
-  
-      <label for="pincode">Pincode</label>
-      <input id="pincode" formControlName="pincode" type="number">
-      <div *ngIf="registrationForm.get('address.pincode')?.invalid && registrationForm.get('address.pincode')?.touched">
-        Pincode must be 6 digits
-      </div>
-    </div>
-  
-    <!-- Subjects -->
-    <div>
-      <label>Subjects</label>
-      <div *ngFor="let subject of subjects">
-        <input type="checkbox" (change)="onSubjectChange($event)" [value]="subject"> {{ subject }}
-      </div>
-      <div *ngIf="registrationForm.get('subjects')?.invalid && registrationForm.get('subjects')?.touched">
-        At least one subject is required
-      </div>
-    </div>
-  
-    <!-- Previous Educational Details -->
-    <div formArrayName="previousEducation">
-      <label>Previous Educational Details</label>
-      <button type="button" (click)="addEducation()">Add</button>
-      <div *ngFor="let edu of previousEducation.controls; let i=index" [formGroupName]="i">
-        <label for="school">School</label>
-        <input id="school" formControlName="school">
-        <div *ngIf="edu.get('school')?.invalid && edu.get('school')?.touched">
-          School is required
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-8 border border-success">
+      <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()" class="mt-4">
+        <!-- First Name -->
+        <div class="form-group">
+          <label for="firstName">First Name<span class="text-danger">*</span></label>
+          <input id="firstName" formControlName="firstName" class="form-control">
+          <div *ngIf="registrationForm.get('firstName')?.invalid && registrationForm.get('firstName')?.touched" class="text-danger">
+            First Name is required
+          </div>
         </div>
-  
-        <label for="yearStart">Year of Start</label>
-        <input id="yearStart" formControlName="yearStart" type="date">
-        <div *ngIf="edu.get('yearStart')?.invalid && edu.get('yearStart')?.touched">
-          Year of Start is required in dd-mm-yyyy format
+      
+        <!-- Last Name -->
+        <div class="form-group">
+          <label for="lastName">Last Name<span class="text-danger">*</span></label>
+          <input id="lastName" formControlName="lastName" class="form-control">
+          <div *ngIf="registrationForm.get('lastName')?.invalid && registrationForm.get('lastName')?.touched" class="text-danger">
+            Last Name is required
+          </div>
         </div>
-  
-        <label for="yearEnd">Year of End</label>
-        <input id="yearEnd" formControlName="yearEnd" type="date">
-        <div *ngIf="edu.get('yearEnd')?.invalid && edu.get('yearEnd')?.touched">
-          Year of End is required in dd-mm-yyyy format
+      
+        <!-- Date of Birth -->
+        <div class="form-group">
+          <label for="dob">Date of Birth<span class="text-danger">*</span></label>
+          <input id="dob" formControlName="dob" type="date" class="form-control">
+          <div *ngIf="registrationForm.get('dob')?.invalid && registrationForm.get('dob')?.touched" class="text-danger">
+            Date of Birth is required in dd-mm-yyyy format
+          </div>
         </div>
-  
-        <button type="button" (click)="removeEducation(i)">Remove</button>
-      </div>
+      
+        <!-- Email -->
+        <div class="form-group">
+          <label for="email">Email<span class="text-danger">*</span></label>
+          <input id="email" formControlName="email" class="form-control">
+          <div *ngIf="registrationForm.get('email')?.invalid && registrationForm.get('email')?.touched" class="text-danger">
+            <div *ngIf="registrationForm.get('email')?.hasError('required')">Email is required</div>
+            <div *ngIf="registrationForm.get('email')?.hasError('email')">Email is invalid</div>
+            <div *ngIf="emailTaken">Email already exists</div>
+          </div>
+        </div>
+      
+        <!-- Address Group -->
+        <div formGroupName="address">
+          <div class="form-group">
+            <label for="address">Address<span class="text-danger">*</span></label>
+            <textarea id="address" formControlName="address" class="form-control"></textarea>
+            <div *ngIf="registrationForm.get('address.address')?.invalid && registrationForm.get('address.address')?.touched" class="text-danger">
+              Address is required
+            </div>
+          </div>
+        
+          <div class="form-group">
+            <label for="state">State<span class="text-danger">*</span></label>
+            <select id="state" formControlName="state" (change)="onStateChange($event)" class="form-control">
+              <option *ngFor="let state of states" [value]="state">{{ state }}</option>
+            </select>
+            <div *ngIf="registrationForm.get('address.state')?.invalid && registrationForm.get('address.state')?.touched" class="text-danger">
+              State is required
+            </div>
+          </div>
+        
+          <div class="form-group">
+            <label for="city">City<span class="text-danger">*</span></label>
+            <select id="city" formControlName="city" class="form-control">
+              <option *ngFor="let city of cities" [value]="city">{{ city }}</option>
+            </select>
+            <div *ngIf="registrationForm.get('address.city')?.invalid && registrationForm.get('address.city')?.touched" class="text-danger">
+              City is required
+            </div>
+          </div>
+        
+          <div class="form-group">
+            <label for="pincode">Pincode<span class="text-danger">*</span></label>
+            <input id="pincode" formControlName="pincode" type="number" class="form-control">
+            <div *ngIf="registrationForm.get('address.pincode')?.invalid && registrationForm.get('address.pincode')?.touched" class="text-danger">
+              Pincode must be 6 digits
+            </div>
+          </div>
+        </div>
+      
+        <!-- Subjects -->
+        <div class="form-group">
+          <label>Subjects<span class="text-danger">*</span></label>
+          <div *ngFor="let subject of subjects" class="form-check">
+            <input type="checkbox" (change)="onSubjectChange($event)" [value]="subject" class="form-check-input"> 
+            <label class="form-check-label">{{ subject }}</label>
+          </div>
+          <div *ngIf="registrationForm.get('subjects')?.invalid && registrationForm.get('subjects')?.touched" class="text-danger">
+            At least one subject is required
+          </div>
+        </div>
+      
+        <!-- Previous Educational Details -->
+        <div formArrayName="previousEducation">
+          <label>Previous Educational Details</label>
+          <button type="button" (click)="addEducation()" class="btn btn-outline-success">Add</button>
+          <div *ngFor="let edu of previousEducation.controls; let i=index" [formGroupName]="i" class="mt-3">
+            <div class="form-group">
+              <label for="school">School</label>
+              <input id="school" formControlName="school" class="form-control">
+              <div *ngIf="edu.get('school')?.invalid && edu.get('school')?.touched" class="text-danger">
+                School is required
+              </div>
+            </div>
+          
+            <div class="form-group">
+              <label for="yearStart">Year of Start</label>
+              <input id="yearStart" formControlName="yearStart" type="date" class="form-control">
+              <div *ngIf="edu.get('yearStart')?.invalid && edu.get('yearStart')?.touched" class="text-danger">
+                Year of Start is required in dd-mm-yyyy format
+              </div>
+            </div>
+          
+            <div class="form-group">
+              <label for="yearEnd">Year of End</label>
+              <input id="yearEnd" formControlName="yearEnd" type="date" class="form-control">
+              <div *ngIf="edu.get('yearEnd')?.invalid && edu.get('yearEnd')?.touched" class="text-danger">
+                Year of End is required in dd-mm-yyyy format
+              </div>
+            </div>
+          
+            <button type="button" (click)="removeEducation(i)" class="btn btn-danger">Remove</button>
+          </div>
+        </div>
+      
+        <button type="submit" [disabled]="registrationForm.invalid" class="btn btn-success mt-3">Submit</button>
+      </form>
     </div>
-  
-    <button type="submit" [disabled]="registrationForm.invalid">Submit</button>
-  </form>
-  
+  </div>
+</div>

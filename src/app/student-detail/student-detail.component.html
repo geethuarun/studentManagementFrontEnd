@@ -1,14 +1,68 @@
-<div>
-  <p>First Name: {{ student?.firstName }}</p>
-  <p>Last Name: {{ student?.lastName }}</p>
-  <p>Date of Birth: {{ student?.dob | date }}</p>
-  <p>Email: {{ student?.email }}</p>
-</div>
-<div class="card" style="width: 18rem;" *ngIf="student">
-  <ul class="list-group list-group-flush">
+<div class="container">
+  <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+    <!-- <button class="btn btn-primary me-md-2" type="button">Button</button> -->
+    <button class="btn btn-outline-success" type="button" [routerLink]="['']">Go back</button>
+  </div>
+  <div class="student-detail">
+    <h2 class="text-center mb-4">Student Details</h2>
     
-    <li class="list-group-item">{{student?.firstName}}</li>
-    <li class="list-group-item">{{student?.lastName}}</li>
-    <li class="list-group-item">{{student?.dob}}</li>
-  </ul>
+    <div class="card mb-4">
+      <div class="card-header">
+        <h3 class="card-title">Personal Information</h3>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-6">
+            <p><strong>First Name:</strong> {{ student.firstName }}</p>
+            <p><strong>Last Name:</strong> {{ student.lastName }}</p>
+            <p><strong>Date of Birth:</strong> {{ student.dob }}</p>
+            <p><strong>Email:</strong> {{ student.email }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card mb-4">
+      <div class="card-header">
+        <h3 class="card-title">Address Information</h3>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-6">
+            <p><strong>Address:</strong> {{ student.address.address }}</p>
+            <p><strong>State:</strong> {{ student.address.state }}</p>
+            <p><strong>City:</strong> {{ student.address.city }}</p>
+            <p><strong>Pincode:</strong> {{ student.address.pincode }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card mb-4">
+      <div class="card-header">
+        <h3 class="card-title">Subjects</h3>
+      </div>
+      <div class="card-body">
+        <ul class="list-group">
+          <li class="list-group-item" *ngFor="let subject of student.subjects">{{ subject }}</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card mb-4">
+      <div class="card-header">
+        <h3 class="card-title">Previous Education</h3>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-6" *ngFor="let edu of student.previousEducation">
+            <p><strong>School:</strong> {{ edu.school }}</p>
+            <p><strong>Year of Start:</strong> {{ edu.yearStart }}</p>
+            <p><strong>Year of End:</strong> {{ edu.yearEnd }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
+

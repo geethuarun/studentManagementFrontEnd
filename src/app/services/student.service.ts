@@ -13,6 +13,8 @@ export class StudentService {
 
   registerStudent(student: any) {
     return this.http.post('https://taskcrud-5b1d0-default-rtdb.firebaseio.com/student.json', student);
+    // return this.http.post('', student);
+
   }
 
   checkEmail(email: string){
