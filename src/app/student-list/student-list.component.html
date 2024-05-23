@@ -1,0 +1,50 @@
+<!-- <div class="search-container">
+  <input type="text" [(ngModel)]="searchTerm" placeholder="Search by name or email">
+  <button (click)="search()">Search</button>
+</div> -->
+ 
+
+<div class="container">
+  
+  <div class="row">
+    <div class="col-2"></div>
+    <div class="col-8">
+      <table class="table ">
+        <thead>
+          <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Name
+            </th>
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let s of studentsNew; let i = index">
+            <th >{{ i + 1 }}</th>
+            <td>{{ s.firstName }}
+            {{ s.lastName }}</td>
+            <td>{{s.id}}</td>
+            <td>
+              <button class="btn btn-primary btn-sm" [routerLink]="['detail', s.id]">View </button>
+              <button class="btn btn-warning btn-sm" [routerLink]="['change', s.id]">Edit</button>
+              <button class="btn btn-danger btn-sm" (click)="deleteStudent(s.id)">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-2"></div>
+  </div> 
+</div>
+
+
+
+<!-- <div *ngFor="let s of studentsNew ;let i=index">
+  id:{{1+i}}
+    <h3>{{ s.firstName }} {{ s.lastName }}</h3>
+     <p>Email: {{ s.email }}</p> -->
+    <!-- <button [routerLink]="['detail',s.id]" >View </button>
+    <button [routerLink]="['change',s.id]" >Edit</button>
+    <button (click)="deleteStudent(s.id)">Delete</button>
+  </div> -->
+    
