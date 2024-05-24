@@ -36,9 +36,9 @@ export class StudentCreateComponent implements OnInit {
       previousEducation: this.fb.array([])
     });
 
-    // this.registrationForm.get('email')?.valueChanges.subscribe(value => {
-      // this.checkEmail(value);
-    // });
+    this.registrationForm.get('email')?.valueChanges.subscribe(value => {
+      this.checkEmail(value);
+    });
   }
 
   ngOnInit() {
@@ -93,19 +93,19 @@ export class StudentCreateComponent implements OnInit {
     this.registrationForm.get('subjects')?.setValue(subjects);
   }
 
-  // checkEmail(email: string) {
-  //   this.studentService.checkEmail(email).subscribe(response => {
-  //     this.emailTaken = response.isTaken;
-  //     if (this.emailTaken) {
-  //       this.registrationForm.get('email')?.setErrors({ emailTaken: true });
-  //     }
-  //   });
-  // }
+  checkEmail(email: string) {
+    this.studentService.checkEmail(email).subscribe(response => {
+      this.emailTaken = response.isTaken;
+      if (this.emailTaken) {
+        this.registrationForm.get('email')?.setErrors({ emailTaken: true });
+      }
+    });
+  }
 
   
   onSubmit() {
-    // if (this.registrationForm.valid && !this.emailTaken) {
-      if (this.registrationForm.valid && !this.emailTaken) {
+    if (this.registrationForm.valid && !this.emailTaken) {
+      // if (this.registrationForm.valid ) {
 
       this.studentService.registerStudent(this.registrationForm.value).subscribe(
         response => {
@@ -121,5 +121,11 @@ export class StudentCreateComponent implements OnInit {
           Swal.fire('Error', 'Failed to register student!', 'error');
         }
       );}
+      else{
+        this.registrationForm.markAllAsTouched()
 
-  }}
+      }
+
+  }
+
+}

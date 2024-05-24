@@ -7,21 +7,29 @@ import { Observable, map } from 'rxjs';
 })
 export class StudentService {
 
-  private apiUrl = 'http://localhost:8000/api/students';
 
   constructor(private http: HttpClient) {}
 
   registerStudent(student: any) {
+    // return this.http.post('http://127.0.0.1:8000/students/', student)
     return this.http.post('https://taskcrud-5b1d0-default-rtdb.firebaseio.com/student.json', student);
     // return this.http.post('', student);
 
   }
-
-  checkEmail(email: string){
-    // return this.http.get<any>(`${this.apiUrl}/check-email/${email}`);
-    return this.http.get<any>('https://taskcrud-5b1d0-default-rtdb.firebaseio.com/student.json/check-email/'+email+'');
-
+  checkEmail(email: string): Observable<{ isTaken: boolean }> {
+    return this.http.get<any>('https://taskcrud-5b1d0-default-rtdb.firebaseio.com/student.json').pipe(
+      map(students => {
+        const emailTaken = Object.values(students).some((student: any) => student.email === email);
+        return { isTaken: emailTaken };
+      })
+    );
   }
+
+  // checkEmail(email: string){
+  //   // return this.http.get<any>(`${this.apiUrl}/check-email/${email}`);
+  //   return this.http.get<any>('https://taskcrud-5b1d0-default-rtdb.firebaseio.com/student.json/check-email/'+email+'');
+
+  // }
 
   getStudents() {
     return this.http.get <{ [key: string]: any }>('https://taskcrud-5b1d0-default-rtdb.firebaseio.com/student.json').pipe(map(data=>{
@@ -51,4 +59,8 @@ export class StudentService {
 
   deleteStudent(id: number) {
     return this.http.delete('https://taskcrud-5b1d0-default-rtdb.firebaseio.com/student/'+id+'.json');
-  }}
+  }
+
+  
+  getStates()  {
+    return this.http.get('')}}

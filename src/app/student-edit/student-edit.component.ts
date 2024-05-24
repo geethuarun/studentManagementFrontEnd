@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { StudentService } from '../services/student.service';
 import Swal from 'sweetalert2'
+import {Student} from '../model/student'
 
 @Component({
   selector: 'app-student-edit',
@@ -16,7 +17,7 @@ export class StudentEditComponent implements OnInit{
   subjects = ['Math', 'Science', 'History'];
   emailTaken = false;
   studentId!: number;
-
+  students: Student | undefined;
   constructor(
     private fb: FormBuilder,
     private studentService: StudentService,
@@ -43,23 +44,25 @@ export class StudentEditComponent implements OnInit{
     this.route.params.subscribe(params => {
       this.studentId = params['pk'];
       this.studentService.getStudent(this.studentId).subscribe(student => {
+        // this.students=student
         this.editForm.patchValue(student);
         // this.setSubjects(student.subjects);
-        // this.setPreviousEducation(student.previousEducation;
+        // this.setPreviousEducation(student.previousEducation);
+        // this.onStateChange({ target: { value: student.address.state } })
       });
     });
 
-    // this.editForm.get('email')?.valueChanges.subscribe(value => {
-    //   this.checkEmail(value);
-    // });
+    this.editForm.get('email')?.valueChanges.subscribe(value => {
+      this.checkEmail(value);
+    });
   }
 
   ngOnInit() {}
 
   onSubmit() {
-    // if (this.editForm.valid && !this.emailTaken) {
+    if (this.editForm.valid && !this.emailTaken) {
 
-    if (this.editForm.valid ) {
+    // if (this.editForm.valid ) {
       this.studentService.updateStudent(this.studentId, this.editForm.value).subscribe(
         response => {
           Swal.fire('Success', 'Student updated successfully!', 'success');
@@ -70,16 +73,19 @@ export class StudentEditComponent implements OnInit{
         }
       );
     }
+    else{
+      this.editForm.markAllAsTouched()
+    }
   }
 
-  // checkEmail(email: string) {
-  //   this.studentService.checkEmail(email).subscribe(response => {
-  //     this.emailTaken = response.isTaken;
-  //     if (this.emailTaken) {
-  //       this.editForm.get('email')?.setErrors({ emailTaken: true });
-  //     }
-  //   });
-  // }
+  checkEmail(email: string) {
+    this.studentService.checkEmail(email).subscribe(response => {
+      this.emailTaken = response.isTaken;
+      if (this.emailTaken) {
+        this.editForm.get('email')?.setErrors({ emailTaken: true });
+      }
+    });
+  }
 
   get previousEducation() {
     return this.editForm.get('previousEducation') as FormArray;
@@ -97,7 +103,7 @@ export class StudentEditComponent implements OnInit{
     this.previousEducation.removeAt(index);
   }
 
-  onStateChange(event: Event): void {
+  onStateChange(event: Event) {
     const selectedState = (event.target as HTMLSelectElement).value;
     if (selectedState === 'State1') {
       this.cities = ['City1-1', 'City1-2'];
@@ -109,7 +115,7 @@ export class StudentEditComponent implements OnInit{
     this.editForm.get('address.city')?.reset();
   }
 
-  onSubjectChange(event: any): void {
+  onSubjectChange(event: any) {
     const subjects = this.editForm.get('subjects')?.value;
     if (event.target.checked) {
       subjects.push(event.target.value);
