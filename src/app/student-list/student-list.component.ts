@@ -32,8 +32,8 @@ screenStudents(){
         const query = this.searchStudent.toLowerCase();
         this.screenStudent = this.studentsNew.filter(
           (student) =>
-            student.firstName.toLowerCase().includes(query) ||
-            student.lastName.toLowerCase().includes(query) ||
+            student.first_name.toLowerCase().includes(query) ||
+            student.last_name.toLowerCase().includes(query) ||
             student.email.toLowerCase().includes(query)
         );
       }
@@ -67,6 +67,8 @@ screenStudents(){
       cancelButtonText: 'Cancel'
     }).then((result) => {
       if (result.isConfirmed) {
+        console.log(id);
+        
         this.studentService.deleteStudent(id).subscribe(() => {
           Swal.fire(
             'Deleted!',

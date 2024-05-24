@@ -13,18 +13,18 @@ import { Router } from '@angular/router';
 })
 export class StudentCreateComponent implements OnInit {
   registrationForm: FormGroup;
-  states = ['State1', 'State2', 'State3'];
-  cities: string[] = [];
-  subjects = ['Math', 'Science', 'History'];
+  states :any;
+  cities: any;
+  subjects:any = [];
   selectedSubjects = [];
   emailTaken = false;
 
   constructor(private fb: FormBuilder, private studentService: StudentService,private router:Router) {
     
     this.registrationForm = this.fb.group({
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
-      dob: ['', Validators.required],
+      first_name: ['', Validators.required],
+      last_name: ['', Validators.required],
+      date_of_birth: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       address: this.fb.group({
         address: ['', Validators.required],
@@ -35,6 +35,9 @@ export class StudentCreateComponent implements OnInit {
       subjects: [[], Validators.required],
       previousEducation: this.fb.array([])
     });
+    this.cities=[]
+    this.loadStates()
+    this.getSubject()
 
     this.registrationForm.get('email')?.valueChanges.subscribe(value => {
       this.checkEmail(value);
@@ -68,17 +71,24 @@ export class StudentCreateComponent implements OnInit {
     }
     return null;
   }
-  onStateChange(event: Event): void {
-    const selectedState = (event.target as HTMLSelectElement).value;
-    if (selectedState === 'State1') {
-      this.cities = ['City1-1', 'City1-2'];
-    } else if (selectedState === 'State2') {
-      this.cities = ['City2-1', 'City2-2'];
-    } else if (selectedState === 'State3') {
-      this.cities = ['City3-1', 'City3-2'];
+  
+  loadStates() {
+      this.studentService.getStates().subscribe(data => {
+        this.states = data;
+      });
     }
-    this.registrationForm.get('address.city')?.reset();
-  }
+  
+  onStateChange(event: Event) {
+      const selectElement = event.target as HTMLSelectElement;
+      let stateId =Number(selectElement.value) ;
+   
+      this.studentService.getCities(stateId).subscribe(data => {
+        this.cities = data;
+      });
+      this.registrationForm.get('address.city')?.reset();
+    }
+
+  
 
   onSubjectChange(event:any) {
     const subjects = this.registrationForm.get('subjects')?.value;
@@ -104,9 +114,9 @@ export class StudentCreateComponent implements OnInit {
 
   
   onSubmit() {
-    if (this.registrationForm.valid && !this.emailTaken) {
-      // if (this.registrationForm.valid ) {
-
+    // if (this.registrationForm.valid && !this.emailTaken) {
+      if (this.registrationForm.valid ) {
+    
       this.studentService.registerStudent(this.registrationForm.value).subscribe(
         response => {
           Swal.fire('Success', 'Student registered successfully!', 'success');
@@ -125,6 +135,12 @@ export class StudentCreateComponent implements OnInit {
         this.registrationForm.markAllAsTouched()
 
       }
+
+  }
+
+  getSubject(){
+    this.studentService.getSubject().subscribe(data => {
+      this.subjects= data})
 
   }
 

@@ -5,7 +5,7 @@
         <!-- First Name -->
         <div class="form-group">
           <label for="firstName">First Name<span class="text-danger">*</span></label>
-          <input id="firstName" formControlName="firstName" class="form-control">
+          <input id="firstName" formControlName="first_name" class="form-control">
           <div *ngIf="registrationForm.get('firstName')?.invalid && registrationForm.get('firstName')?.touched" class="text-danger">
             First Name is required
           </div>
@@ -14,7 +14,7 @@
         <!-- Last Name -->
         <div class="form-group">
           <label for="lastName">Last Name<span class="text-danger">*</span></label>
-          <input id="lastName" formControlName="lastName" class="form-control">
+          <input id="lastName" formControlName="last_name" class="form-control">
           <div *ngIf="registrationForm.get('lastName')?.invalid && registrationForm.get('lastName')?.touched" class="text-danger">
             Last Name is required
           </div>
@@ -23,7 +23,7 @@
         <!-- Date of Birth -->
         <div class="form-group">
           <label for="dob">Date of Birth<span class="text-danger">*</span></label>
-          <input id="dob" formControlName="dob" type="date" class="form-control">
+          <input id="dob" formControlName="date_of_birth" type="date" class="form-control">
           <div *ngIf="registrationForm.get('dob')?.invalid && registrationForm.get('dob')?.touched" class="text-danger">
             Date of Birth is required in dd-mm-yyyy format
           </div>
@@ -53,7 +53,7 @@
           <div class="form-group">
             <label for="state">State<span class="text-danger">*</span></label>
             <select id="state" formControlName="state" (change)="onStateChange($event)" class="form-control">
-              <option *ngFor="let state of states" [value]="state">{{ state }}</option>
+              <option *ngFor="let state of states" [value]="state.id">{{ state.name }}</option>
             </select>
             <div *ngIf="registrationForm.get('address.state')?.invalid && registrationForm.get('address.state')?.touched" class="text-danger">
               State is required
@@ -63,7 +63,7 @@
           <div class="form-group">
             <label for="city">City<span class="text-danger">*</span></label>
             <select id="city" formControlName="city" class="form-control">
-              <option *ngFor="let city of cities" [value]="city">{{ city }}</option>
+              <option *ngFor="let city of cities" [value]="city.id">{{ city.name }}</option>
             </select>
             <div *ngIf="registrationForm.get('address.city')?.invalid && registrationForm.get('address.city')?.touched" class="text-danger">
               City is required
@@ -83,8 +83,8 @@
         <div class="form-group">
           <label>Subjects<span class="text-danger">*</span></label>
           <div *ngFor="let subject of subjects" class="form-check">
-            <input type="checkbox" (change)="onSubjectChange($event)" [value]="subject" class="form-check-input"> 
-            <label class="form-check-label">{{ subject }}</label>
+            <input type="checkbox" (change)="onSubjectChange($event)" [value]="subject.id" class="form-check-input"> 
+            <label class="form-check-label">{{ subject.name }}</label>
           </div>
           <div *ngIf="registrationForm.get('subjects')?.invalid && registrationForm.get('subjects')?.touched" class="text-danger">
             At least one subject is required
@@ -125,6 +125,8 @@
         </div>
       
         <button type="submit"  class="btn btn-success mt-3" >Submit</button>
+        <!-- <button  class="btn btn-success mt-3" >Submit</button> -->
+
         <!-- [disabled]="registrationForm.invalid" -->
       </form>
     </div>

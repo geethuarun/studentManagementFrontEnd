@@ -24,9 +24,10 @@
         <tbody>
           <tr *ngFor="let s of screenStudent; let i = index">
             <th >{{ i + 1 }}</th>
-            <td>{{ s.firstName }}</td>
-            <td>{{ s.lastName }}</td>
+            <td>{{ s.first_name }}</td>
+            <td>{{ s.last_name }}</td>
             <td>{{ s.email }}</td>
+            <td>{{s.id}}</td>
 
             
             <td>
