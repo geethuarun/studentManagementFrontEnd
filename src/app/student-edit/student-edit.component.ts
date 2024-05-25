@@ -1,121 +1,65 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { StudentService } from '../services/student.service';
-import Swal from 'sweetalert2'
+import { Router, ActivatedRoute } from '@angular/router';
 import {Student} from '../model/student'
+import Swal from 'sweetalert2';
+
+
 
 @Component({
   selector: 'app-student-edit',
   templateUrl: './student-edit.component.html',
   styleUrls: ['./student-edit.component.css']
 })
-export class StudentEditComponent implements OnInit{
+export class StudentEditComponent implements OnInit {
   editForm: FormGroup;
-  states = ['State1', 'State2', 'State3'];
-  cities: string[] = [];
-  subjects = ['Math', 'Science', 'History'];
-  emailTaken = false;
   studentId!: number;
-  students: Student | undefined;
-  constructor(
-    private fb: FormBuilder,
-    private studentService: StudentService,
-    private router: Router,
-    private route: ActivatedRoute
-  ) {
-    // this.studentId = this.route.snapshot.params['pk'];
+  emailTaken!:false
 
+  constructor(private fb: FormBuilder, private studentService: StudentService, private router: Router, private route: ActivatedRoute) {
     this.editForm = this.fb.group({
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
-      dob: ['', Validators.required],
+      first_name: ['', Validators.required],
+      last_name: ['', Validators.required],
+      date_of_birth: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       address: this.fb.group({
-        address: ['', Validators.required],
+        street: ['', Validators.required],
         state: ['', Validators.required],
         city: ['', Validators.required],
         pincode: ['', [Validators.required, Validators.pattern(/^\d{6}$/)]]
       }),
-      subjects: [[], Validators.required],
-      previousEducation: this.fb.array([])
+      subjects: [[], Validators.required]
     });
+  }
 
+  ngOnInit() {
     this.route.params.subscribe(params => {
-      this.studentId = params['pk'];
-      this.studentService.getStudent(this.studentId).subscribe(student => {
-        // this.students=student
-        this.editForm.patchValue(student);
-        // this.setSubjects(student.subjects);
-        // this.setPreviousEducation(student.previousEducation);
-        // this.onStateChange({ target: { value: student.address.state } })
-      });
-    });
-
-    this.editForm.get('email')?.valueChanges.subscribe(value => {
-      this.checkEmail(value);
+      this.studentId = +params['pk']; 
+      this.populateFormWithStudentDetails(this.studentId);
     });
   }
 
-  ngOnInit() {}
-
-  onSubmit() {
-    if (this.editForm.valid && !this.emailTaken) {
-
-    // if (this.editForm.valid ) {
-      this.studentService.updateStudent(this.studentId, this.editForm.value).subscribe(
-        response => {
-          Swal.fire('Success', 'Student updated successfully!', 'success');
-          this.router.navigate(['']); 
-        },
-        error => {
-          Swal.fire('Error', 'Failed to update student!', 'error');
-        }
-      );
-    }
-    else{
-      this.editForm.markAllAsTouched()
-    }
-  }
-
-  checkEmail(email: string) {
-    this.studentService.checkEmail(email).subscribe(response => {
-      this.emailTaken = response.isTaken;
-      if (this.emailTaken) {
-        this.editForm.get('email')?.setErrors({ emailTaken: true });
+  populateFormWithStudentDetails(studentId: number) {
+    this.studentService.getStudent(studentId).subscribe(
+      (student:any) => {
+        this.editForm.patchValue({
+          first_name: student.first_name,
+          last_name: student.last_name,
+          date_of_birth: student.date_of_birth,
+          email: student.email
+        });
+        this.editForm.get('address')?.patchValue({
+          street: student.street,
+          state: student.state,
+          city: student.city,
+          pincode: student.pincode
+        });
+        this.editForm.get('subjects')?.setValue(student.subjects);
       }
-    });
+    );
   }
-
-  get previousEducation() {
-    return this.editForm.get('previousEducation') as FormArray;
-  }
-
-  addEducation() {
-    this.previousEducation.push(this.fb.group({
-      school: ['', Validators.required],
-      yearStart: ['', Validators.required],
-      yearEnd: ['', Validators.required]
-    }));
-  }
-
-  removeEducation(index: number) {
-    this.previousEducation.removeAt(index);
-  }
-
-  onStateChange(event: Event) {
-    const selectedState = (event.target as HTMLSelectElement).value;
-    if (selectedState === 'State1') {
-      this.cities = ['City1-1', 'City1-2'];
-    } else if (selectedState === 'State2') {
-      this.cities = ['City2-1', 'City2-2'];
-    } else if (selectedState === 'State3') {
-      this.cities = ['City3-1', 'City3-2'];
-    }
-    this.editForm.get('address.city')?.reset();
-  }
-
-  onSubjectChange(event: any) {
+  onSubjectChange(event:any) {
     const subjects = this.editForm.get('subjects')?.value;
     if (event.target.checked) {
       subjects.push(event.target.value);
@@ -128,24 +72,45 @@ export class StudentEditComponent implements OnInit{
     this.editForm.get('subjects')?.setValue(subjects);
   }
 
-  isSubjectSelected(subject: string): boolean {
-    return this.editForm.get('subjects')?.value.includes(subject);
-  }
+  // checkEmail(email: string) {
+  //   this.studentService.checkEmail(email).subscribe(response => {
+  //     this.emailTaken = response.isTaken;
+  //     if (this.emailTaken) {
+  //       this.editForm.get('email')?.setErrors({ emailTaken: true });
+  //     }
+  //   });
+  // }
 
-  setSubjects(subjects: string[]) {
-    this.editForm.get('subjects')?.setValue(subjects || []);
-  }
+  
+    
+  
 
-  setPreviousEducation(education: any[]) {
-    const control = this.editForm.get('previousEducation') as FormArray;
-    education.forEach(edu => {
-      control.push(this.fb.group({
-        school: [edu.school, Validators.required],
-        yearStart: [edu.yearStart, Validators.required],
-        yearEnd: [edu.yearEnd, Validators.required]
-      }));
-    });
-  }
-}
- 
+  onSubmit() {
+    if (this.editForm.valid) {
+      let updatedStudentDetails = {
+        street:this.editForm.value.address.street,
+        city:this.editForm.value.address.city,
+         pincode: this.editForm.value.address.pincode,
+         state:this.editForm.value.address.state,
+         date_of_birth:this.editForm.value.date_of_birth ,
+         email: this.editForm.value.email,
+         first_name: this.editForm.value.first_name,
+         last_name: this.editForm.value.last_name,
+         subjects:this.editForm.value.subjects}
+
+
+      
+      this.studentService.updateStudent(this.studentId, updatedStudentDetails).subscribe(
+        response => {
+          console.log('Student details updated successfully:', response);
+          this.router.navigate(['']);
+        },
+        error => {
+          console.error('Failed to update student details:', error);
+        }
+      );
+    } else {
+      this.editForm.markAllAsTouched();
+    }
+  }}
 

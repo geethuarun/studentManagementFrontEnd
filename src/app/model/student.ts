@@ -4,20 +4,20 @@ export interface Student {
   id: number;
   firstName: string;
   lastName: string;
-  dob: Date;
+  date_of_birth: Date;
   email: string;
   address: {
-    address: string;
+    street: string;
     state: string;
     city: string;
     pincode: number;
   };
   subjects: string[];
-  previousEducation: {
-    school: string;
-    yearStart: Date;
-    yearEnd: Date;
-  }[];
+  // previousEducation: {
+  //   school: string;
+  //   yearStart: Date;
+  //   yearEnd: Date;
+  // }[];
 }
 
 

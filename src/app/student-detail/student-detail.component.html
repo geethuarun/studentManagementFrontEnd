@@ -15,7 +15,7 @@
           <div class="col-md-6">
             <p><strong>First Name:</strong> {{ student.first_name }}</p>
             <p><strong>Last Name:</strong> {{ student.last_name }}</p>
-            <p><strong>Date of Birth:</strong> {{ student.dob }}</p>
+            <p><strong>Date of Birth:</strong> {{ student.date_of_birth }}</p>
             <p><strong>Email:</strong> {{ student.email }}</p>
           </div>
         </div>
@@ -29,10 +29,10 @@
       <div class="card-body">
         <div class="row">
           <div class="col-md-6">
-            <p><strong>Address:</strong> {{ student.address.address }}</p>
-            <p><strong>State:</strong> {{ student.address.state }}</p>
-            <p><strong>City:</strong> {{ student.address.city }}</p>
-            <p><strong>Pincode:</strong> {{ student.address.pincode }}</p>
+            <p><strong>Address:</strong> {{ student.street }}</p>
+            <p><strong>State:</strong> {{ student.state }}</p>
+            <p><strong>City:</strong> {{ student.city }}</p>
+            <p><strong>Pincode:</strong> {{ student.pincode }}</p>
           </div>
         </div>
       </div>
@@ -49,20 +49,4 @@
       </div>
     </div>
 
-    <div class="card mb-4">
-      <div class="card-header">
-        <h3 class="card-title">Previous Education</h3>
-      </div>
-      <div class="card-body">
-        <div class="row">
-          <div class="col-md-6" *ngFor="let edu of student.previousEducation">
-            <p><strong>School:</strong> {{ edu.school }}</p>
-            <p><strong>Year of Start:</strong> {{ edu.yearStart }}</p>
-            <p><strong>Year of End:</strong> {{ edu.yearEnd }}</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
+    

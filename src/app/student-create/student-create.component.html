@@ -6,7 +6,7 @@
         <div class="form-group">
           <label for="firstName">First Name<span class="text-danger">*</span></label>
           <input id="firstName" formControlName="first_name" class="form-control">
-          <div *ngIf="registrationForm.get('firstName')?.invalid && registrationForm.get('firstName')?.touched" class="text-danger">
+          <div *ngIf="registrationForm.get('first_name')?.invalid && registrationForm.get('first_name')?.touched" class="text-danger">
             First Name is required
           </div>
         </div>
@@ -15,7 +15,7 @@
         <div class="form-group">
           <label for="lastName">Last Name<span class="text-danger">*</span></label>
           <input id="lastName" formControlName="last_name" class="form-control">
-          <div *ngIf="registrationForm.get('lastName')?.invalid && registrationForm.get('lastName')?.touched" class="text-danger">
+          <div *ngIf="registrationForm.get('last_name')?.invalid && registrationForm.get('last_name')?.touched" class="text-danger">
             Last Name is required
           </div>
         </div>
@@ -24,7 +24,7 @@
         <div class="form-group">
           <label for="dob">Date of Birth<span class="text-danger">*</span></label>
           <input id="dob" formControlName="date_of_birth" type="date" class="form-control">
-          <div *ngIf="registrationForm.get('dob')?.invalid && registrationForm.get('dob')?.touched" class="text-danger">
+          <div *ngIf="registrationForm.get('date_of_birth')?.invalid && registrationForm.get('date_of_birth')?.touched" class="text-danger">
             Date of Birth is required in dd-mm-yyyy format
           </div>
         </div>
@@ -45,7 +45,7 @@
           <div class="form-group">
             <label for="address">Address<span class="text-danger">*</span></label>
             <textarea id="address" formControlName="street" class="form-control"></textarea>
-            <div *ngIf="registrationForm.get('address.address')?.invalid && registrationForm.get('address.address')?.touched" class="text-danger">
+            <div *ngIf="registrationForm.get('address.street')?.invalid && registrationForm.get('address.street')?.touched" class="text-danger">
               Address is required
             </div>
           </div>
