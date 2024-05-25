@@ -15,8 +15,8 @@ export class StudentCreateComponent implements OnInit {
   registrationForm: FormGroup;
   states :any;
   cities: any;
-  subjects:any = [];
-  selectedSubjects = [];
+  // subjects:any = [];
+  // selectedSubjects = [];
   emailTaken = false;
 
   constructor(private fb: FormBuilder, private studentService: StudentService,private router:Router) {
@@ -27,17 +27,17 @@ export class StudentCreateComponent implements OnInit {
       date_of_birth: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       address: this.fb.group({
-        address: ['', Validators.required],
+        street: ['', Validators.required],
         state: ['', Validators.required],
         city: ['', Validators.required],
         pincode: ['', [Validators.required, Validators.pattern(/^\d{6}$/)]]
       }),
       subjects: [[], Validators.required],
-      previousEducation: this.fb.array([])
+      // previousEducation: this.fb.array([])
     });
-    this.cities=[]
-    this.loadStates()
-    this.getSubject()
+    // this.cities=[]
+    // this.loadStates()
+    // this.getSubject()
 
     this.registrationForm.get('email')?.valueChanges.subscribe(value => {
       this.checkEmail(value);
@@ -47,21 +47,21 @@ export class StudentCreateComponent implements OnInit {
   ngOnInit() {
   }
 
-  get previousEducation(): FormArray {
-    return this.registrationForm.get('previousEducation') as FormArray;
-  }
+  // get previousEducation(): FormArray {
+  //   return this.registrationForm.get('previousEducation') as FormArray;
+  // }
 
-  addEducation() {
-    this.previousEducation.push(this.fb.group({
-      school: ['', Validators.required],
-      yearStart: ['', Validators.required],
-      yearEnd: ['', Validators.required]
-    }));
-  }
+  // addEducation() {
+  //   this.previousEducation.push(this.fb.group({
+  //     school: ['', Validators.required],
+  //     yearStart: ['', Validators.required],
+  //     yearEnd: ['', Validators.required]
+  //   }));
+  // }
 
-  removeEducation(index: number) {
-    this.previousEducation.removeAt(index);
-  }
+  // removeEducation(index: number) {
+  //   this.previousEducation.removeAt(index);
+  // }
 
   
   dateValidator(control: AbstractControl) {
@@ -72,21 +72,21 @@ export class StudentCreateComponent implements OnInit {
     return null;
   }
   
-  loadStates() {
-      this.studentService.getStates().subscribe(data => {
-        this.states = data;
-      });
-    }
+  // loadStates() {
+  //     this.studentService.getStates().subscribe(data => {
+  //       this.states = data;
+  //     });
+  //   }
   
-  onStateChange(event: Event) {
-      const selectElement = event.target as HTMLSelectElement;
-      let stateId =Number(selectElement.value) ;
+  // onStateChange(event: Event) {
+  //     const selectElement = event.target as HTMLSelectElement;
+  //     let stateId =Number(selectElement.value) ;
    
-      this.studentService.getCities(stateId).subscribe(data => {
-        this.cities = data;
-      });
-      this.registrationForm.get('address.city')?.reset();
-    }
+  //     this.studentService.getCities(stateId).subscribe(data => {
+  //       this.cities = data;
+  //     });
+  //     this.registrationForm.get('address.city')?.reset();
+  //   }
 
   
 
@@ -116,16 +116,32 @@ export class StudentCreateComponent implements OnInit {
   onSubmit() {
     // if (this.registrationForm.valid && !this.emailTaken) {
       if (this.registrationForm.valid ) {
+        let form={
+          street:this.registrationForm.value.address.street,
+          city:this.registrationForm.value.address.city,
+           pincode: this.registrationForm.value.address.pincode,
+           state:this.registrationForm.value.address.state,
+           date_of_birth:this.registrationForm.value.date_of_birth ,
+           email: this.registrationForm.value.email,
+           first_name: this.registrationForm.value.first_name,
+           last_name: this.registrationForm.value.last_name,
+           subjects:this.registrationForm.value.subjects}
+ 
+
+
+        //   first_name:this.registrationForm.
+        // }
+    console.log(this.registrationForm.value);
     
-      this.studentService.registerStudent(this.registrationForm.value).subscribe(
+      this.studentService.registerStudent(form).subscribe(
         response => {
           Swal.fire('Success', 'Student registered successfully!', 'success');
           this.router.navigate(['']); 
           this.registrationForm.reset();
-          this.selectedSubjects = [];
-          while (this.previousEducation.length) {
-            this.previousEducation.removeAt(0);
-          }
+          // this.selectedSubjects = [];
+          // while (this.previousEducation.length) {
+          //   this.previousEducation.removeAt(0);
+          // }
         },
         error => {
           Swal.fire('Error', 'Failed to register student!', 'error');
@@ -138,10 +154,10 @@ export class StudentCreateComponent implements OnInit {
 
   }
 
-  getSubject(){
-    this.studentService.getSubject().subscribe(data => {
-      this.subjects= data})
+  // getSubject(){
+  //   this.studentService.getSubject().subscribe(data => {
+  //     this.subjects= data})
 
-  }
+  // }
 
 }
