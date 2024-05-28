@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators,AbstractControl,ValidationErrors } from '@angular/forms';
 import { StudentService } from '../services/student.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import {Student} from '../model/student'
 import Swal from 'sweetalert2';
+import { Observable, map } from 'rxjs';
+
 
 
 
@@ -15,14 +17,15 @@ import Swal from 'sweetalert2';
 export class StudentEditComponent implements OnInit {
   editForm: FormGroup;
   studentId!: number;
-  emailTaken!:false
+  emailTaken=false
 
   constructor(private fb: FormBuilder, private studentService: StudentService, private router: Router, private route: ActivatedRoute) {
     this.editForm = this.fb.group({
       first_name: ['', Validators.required],
       last_name: ['', Validators.required],
       date_of_birth: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
+      email: ['', [Validators.required, Validators.email,Validators.pattern(/^[\w-]+(\.[\w-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,})$/
+    )]],
       address: this.fb.group({
         street: ['', Validators.required],
         state: ['', Validators.required],
@@ -31,6 +34,7 @@ export class StudentEditComponent implements OnInit {
       }),
       subjects: [[], Validators.required]
     });
+    
   }
 
   ngOnInit() {
@@ -55,11 +59,25 @@ export class StudentEditComponent implements OnInit {
           city: student.city,
           pincode: student.pincode
         });
-        this.editForm.get('subjects')?.setValue(student.subjects);
+        // this.editForm.get('subjects')?.setValue(student.subjects);
+        this.editForm.get('subjects')?.setValue(student['subjects']);
+
       }
     );
   }
-  onSubjectChange(event:any) {
+  // onSubjectChange(event:any) {
+  //   const subjects = this.editForm.get('subjects')?.value;
+  //   if (event.target.checked) {
+  //     subjects.push(event.target.value);
+  //   } else {
+  //     const index = subjects.indexOf(event.target.value);
+  //     if (index > -1) {
+  //       subjects.splice(index, 1);
+  //     }
+  //   }
+  //   this.editForm.get('subjects')?.setValue(subjects);
+  // }
+  onSubjectChange(event: any) {
     const subjects = this.editForm.get('subjects')?.value;
     if (event.target.checked) {
       subjects.push(event.target.value);
@@ -71,14 +89,54 @@ export class StudentEditComponent implements OnInit {
     }
     this.editForm.get('subjects')?.setValue(subjects);
   }
+  checkDateFormat() {
+    const dateOfBirthControl = this.editForm.get('date_of_birth');
+    if (!dateOfBirthControl) return; // If null, exit the function
+    
+    const dateValue = dateOfBirthControl.value;
+    const isValidFormat = this.isValidDateFormat(dateValue);
+    
+    if (dateOfBirthControl.errors?.['invalidDate']) {
+      delete dateOfBirthControl.errors['invalidDate'];
+      if (!Object.keys(dateOfBirthControl.errors || {}).length) {
+        dateOfBirthControl.setErrors(null);
+      }
+    }
+  
+    if (isValidFormat) {
+      dateOfBirthControl.setErrors(null);
+    } else {
+      dateOfBirthControl.setErrors({ 'invalidDate': true });
+    }
+  }
+  
 
-  // checkEmail(email: string) {
-  //   this.studentService.checkEmail(email).subscribe(response => {
-  //     this.emailTaken = response.isTaken;
-  //     if (this.emailTaken) {
-  //       this.editForm.get('email')?.setErrors({ emailTaken: true });
-  //     }
-  //   });
+  isValidDateFormat(date: string): boolean {
+    const regex = /^\d{4}-\d{2}-\d{2}$/;
+    return regex.test(date);
+  }
+
+  isSubjectSelected(subject: string): boolean {
+    const selectedSubjects = this.editForm.get('subjects')?.value;
+    return selectedSubjects.includes(subject);
+  }
+
+  checkEmail(email: string) {
+    this.studentService.checkEmail(email).subscribe(response => {
+      console.log(response);
+      
+      this.emailTaken = response.isTaken;
+      if (this.emailTaken) {
+        this.editForm.get('email')?.setErrors({ emailTaken: true });
+      }
+    });
+  }
+
+  // emailExistsValidator(control: AbstractControl): Observable<ValidationErrors | null> {
+  //   const email = control.value;
+  //   return this.studentService.checkEmail(email).pipe(
+  //     map(exists => (exists ? { emailTaken: true } : null))
+  //   );
   // }
 
   
@@ -87,30 +145,36 @@ export class StudentEditComponent implements OnInit {
 
   onSubmit() {
     if (this.editForm.valid) {
-      let updatedStudentDetails = {
-        street:this.editForm.value.address.street,
-        city:this.editForm.value.address.city,
-         pincode: this.editForm.value.address.pincode,
-         state:this.editForm.value.address.state,
-         date_of_birth:this.editForm.value.date_of_birth ,
-         email: this.editForm.value.email,
-         first_name: this.editForm.value.first_name,
-         last_name: this.editForm.value.last_name,
-         subjects:this.editForm.value.subjects}
-
-
-      
-      this.studentService.updateStudent(this.studentId, updatedStudentDetails).subscribe(
-        response => {
-          console.log('Student details updated successfully:', response);
-          this.router.navigate(['']);
-        },
-        error => {
-          console.error('Failed to update student details:', error);
-        }
-      );
+      const email = this.editForm.value.email; // Get the email value from the form
+      this.checkEmail(email); // Call the checkEmail method to perform validation
+  
+      // If the email is not taken (valid), proceed with form submission
+      if (!this.emailTaken) {
+        let updatedStudentDetails = {
+          street: this.editForm.value.address.street,
+          city: this.editForm.value.address.city,
+          pincode: this.editForm.value.address.pincode,
+          state: this.editForm.value.address.state,
+          date_of_birth: this.editForm.value.date_of_birth,
+          email: this.editForm.value.email,
+          first_name: this.editForm.value.first_name,
+          last_name: this.editForm.value.last_name,
+          subjects: this.editForm.value.subjects
+        };
+  
+        this.studentService.updateStudent(this.studentId, updatedStudentDetails).subscribe(
+          response => {
+            console.log('Student details updated successfully:', response);
+            this.router.navigate(['']);
+          },
+          error => {
+            console.error('Failed to update student details:', error);
+          }
+        );
+      }
     } else {
       this.editForm.markAllAsTouched();
     }
-  }}
+  }
+  }
 

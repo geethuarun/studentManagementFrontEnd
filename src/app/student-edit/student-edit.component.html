@@ -1,3 +1,7 @@
+
+<div class="col text-end">
+  <button class="btn btn-outline-success" type="button" [routerLink]="['']">Go back</button>
+</div>
 <div class="container">
   <div class="row justify-content-center">
     <div class="col-md-8 border border-success">
@@ -22,21 +26,30 @@
       
         <!-- Date of Birth -->
         <div class="form-group">
-          <label for="dob">Date of Birth<span class="text-danger">*</span></label>
-          <input id="dob" formControlName="date_of_birth" type="date" class="form-control">
-          <div *ngIf="editForm.get('date_of_birth')?.invalid && editForm.get('date_of_birth')?.touched" class="text-danger">
-            Date of Birth is required in dd-mm-yyyy format
-          </div>
+          <label>Date of Birth:*</label>
+          <input formControlName="date_of_birth" type="date" class="form-control" (input)="checkDateFormat()">
+          <small *ngIf="editForm.get('date_of_birth')?.touched && editForm.get('date_of_birth')?.errors?.['required']" class="text-danger">
+            Date of Birth is required.
+          </small>
+          <small *ngIf="editForm.get('date_of_birth')?.touched && editForm.get('date_of_birth')?.errors?.['invalidDate']" class="text-danger">
+            Invalid date format. Please use dd-mm-yyyy format.
+          </small>
         </div>
+        
+        
       
         <!-- Email -->
         <div class="form-group">
           <label for="email">Email<span class="text-danger">*</span></label>
-          <input id="email" formControlName="email" class="form-control">
+          <input id="email" formControlName="email" class="form-control" >
           <div *ngIf="editForm.get('email')?.invalid && editForm.get('email')?.touched" class="text-danger">
             <div *ngIf="editForm.get('email')?.hasError('required')">Email is required</div>
-            <div *ngIf="editForm.get('email')?.hasError('email')">Email is invalid</div>
-            <div *ngIf="emailTaken">Email already exists</div>
+            <!-- <div *ngIf="editForm.get('email')?.hasError('email')">Email is invalid</div> -->
+            <div *ngIf="editForm.get('email')?.hasError('emailTaken')">Email already exist</div>
+            <div *ngIf="editForm.get('email')?.hasError('pattern')">Email pattern incorrect</div>
+
+
+            <!-- <div *ngIf="emailTaken">Email already exists</div> -->
           </div>
         </div>
       
@@ -45,7 +58,7 @@
           <div class="form-group">
             <label for="address">Address<span class="text-danger">*</span></label>
             <textarea id="address" formControlName="street" class="form-control"></textarea>
-            <div *ngIf="editForm.get('address.address')?.invalid && editForm.get('address.address')?.touched" class="text-danger">
+            <div *ngIf="editForm.get('address.street')?.invalid && editForm.get('address.street')?.touched" class="text-danger">
               Address is required
             </div>
           </div>
@@ -54,9 +67,9 @@
             <label for="state">State<span class="text-danger">*</span></label>
             <select id="state" formControlName="state"  class="form-control">
               <!-- (change)="onStateChange($event)" -->
-              <option  value=""disabled selected>select state</option>
+              <option  value="" disabled selected>select state</option>
               <option  value="kerala">kerala</option>
-              <option  value="tamil">tamilnadu</option>
+              <option  value="tamilnadu">tamilnadu</option>
               <option  value="karnataka">karnataka</option>
 
 
@@ -89,37 +102,18 @@
             </div>
           </div>
         </div>
-      
-        <!-- Subjects -->
-        <div class="form-group">
+       
+         <!-- Subjects -->
+         <div class="form-group">
           <label>Subjects<span class="text-danger">*</span></label>
-          <div class="radio-group" style="display: flex; align-items: center;">
-            <label class="radio-label">
-              <!-- <input type="checkbox" (change)="onSubjectChange($event)" value="Math"> -->
-              <input type="checkbox"  value="Math">
-
-              Math
-            </label>
-            <label class="radio-label">
-              <input type="checkbox" (change)="onSubjectChange($event)" value="Science">
-              <!-- <input type="checkbox"  value="Science"> -->
-
-              Science
-            </label>
-            <label class="radio-label">
-              <!-- <input type="checkbox"  value="English"> -->
-
-
-              <input type="checkbox" (change)="onSubjectChange($event)" value="English">
-              English
+          <div class="checkbox-group" style="display: flex; flex-wrap: wrap;">
+            <label class="checkbox-label" *ngFor="let subject of ['Math', 'Science', 'English']">
+              <input type="checkbox" (change)="onSubjectChange($event)" [value]="subject" [checked]="isSubjectSelected(subject)">
+              {{ subject }}
             </label>
           </div>
-          <!-- <div *ngFor="let subject of subjects" class="form-check">
-            <input type="checkbox" (change)="onSubjectChange($event)" [value]="subject.id" class="form-check-input"> 
-            <label class="form-check-label">{{ subject.name }}</label>
-          </div> -->
           <div *ngIf="editForm.get('subjects')?.invalid && editForm.get('subjects')?.touched" class="text-danger">
-            Atleast one subject is required
+            At least one subject is required
           </div>
         </div>
       

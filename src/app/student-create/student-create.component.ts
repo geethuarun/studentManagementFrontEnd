@@ -5,6 +5,8 @@ import { StudentService } from '../services/student.service';
 import Swal from 'sweetalert2';
 import { AnyCatcher } from 'rxjs/internal/AnyCatcher';
 import { Router } from '@angular/router';
+import { DatePipe } from '@angular/common';
+
 
 @Component({
   selector: 'app-student-create',
@@ -17,7 +19,7 @@ export class StudentCreateComponent implements OnInit {
   cities: any;
   // subjects:any = [];
   // selectedSubjects = [];
-  emailTaken = false;
+  emailTaken=false;
 
   constructor(private fb: FormBuilder, private studentService: StudentService,private router:Router) {
     
@@ -25,7 +27,7 @@ export class StudentCreateComponent implements OnInit {
       first_name: ['', Validators.required],
       last_name: ['', Validators.required],
       date_of_birth: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
+      email: ['', [Validators.required, Validators.email,Validators.pattern(/^[\w-]+(\.[\w-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,})$/)]],
       address: this.fb.group({
         street: ['', Validators.required],
         state: ['', Validators.required],
@@ -43,6 +45,27 @@ export class StudentCreateComponent implements OnInit {
       this.checkEmail(value);
     });
   }
+  checkDateFormat() {
+    const dateOfBirthControl = this.registrationForm.get('date_of_birth');
+    if (!dateOfBirthControl) return; // If null, exit the function
+    
+    const dateValue = dateOfBirthControl.value;
+    const isValidFormat = this.isValidDateFormat(dateValue);
+    
+    if (dateOfBirthControl.errors?.['invalidDate']) {
+      delete dateOfBirthControl.errors['invalidDate'];
+      if (!Object.keys(dateOfBirthControl.errors || {}).length) {
+        dateOfBirthControl.setErrors(null);
+      }
+    }
+  
+    if (isValidFormat) {
+      dateOfBirthControl.setErrors(null);
+    } else {
+      dateOfBirthControl.setErrors({ 'invalidDate': true });
+    }
+  }
+  
 
   ngOnInit() {
   }
@@ -64,13 +87,6 @@ export class StudentCreateComponent implements OnInit {
   // }
 
   
-  dateValidator(control: AbstractControl) {
-    const value = control.value;
-    if (value && !/^\d{2}-\d{2}-\d{4}$/.test(value)) {
-      return { dateInvalid: true };
-    }
-    return null;
-  }
   
   // loadStates() {
   //     this.studentService.getStates().subscribe(data => {
@@ -111,6 +127,19 @@ export class StudentCreateComponent implements OnInit {
       }
     });
   }
+  // getFormattedDateOfBirth(): string {
+  //   const dob = this.registrationForm.get('date_of_birth')?.value;
+  //   if (dob) {
+  //     return this.datePipe.transform(dob, 'dd-MM-yyyy') || '';
+  //   }
+  //   return '';
+  // }
+  isValidDateFormat(date: string): boolean {
+    const regex = /^\d{4}-\d{2}-\d{2}$/;
+    return regex.test(date);
+  }
+
+  
 
   
   onSubmit() {

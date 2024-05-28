@@ -1,56 +1,39 @@
-
-<input class="ms-3 mt-3 " type="text" placeholder="Search" aria-label="Search" [(ngModel)]="searchStudent" (input)="screenStudents()">
-
- 
-
-<div class="container">
-  
+<div class="col text-end">
+  <button class="btn btn-outline-success mt-3 me-3" type="button" [routerLink]="['create']">Create</button>
+</div>
+<div class="container mt-3">
   <div class="row">
-    <div class="col-2"></div>
-    <div class="col-8">
-      <table class="table table-hover">
-        <thead>
+    <div class="col-md-12">
+      <input class="form-control mt-3" type="text" placeholder="Search" aria-label="Search" [(ngModel)]="searchStudent" (input)="screenStudents()">
+    </div>
+  </div>
+
+  <div class="row mt-3">
+    <div class="col-md-12">
+      <table class="table table-striped table-hover">
+        <thead class="table-dark">
           <tr>
             <th scope="col">Id</th>
             <th scope="col">First Name</th>
             <th scope="col">Last Name</th>
             <th scope="col">Email</th>
-
-
-
             <th scope="col">Actions</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let s of screenStudent; let i = index">
-            <th >{{ i + 1 }}</th>
+            <td>{{ i + 1 }}</td>
             <td>{{ s.first_name }}</td>
             <td>{{ s.last_name }}</td>
             <td>{{ s.email }}</td>
-            <td>{{s.id}}</td>
-
-            
             <td>
-              <button class="btn btn-primary btn-sm me-2" [routerLink]="['detail', s.id]"><i class="fa-regular fa-eye" style="color: #74C0FC;"></i>View </button>
-              <button class="btn btn-warning btn-sm me-2" [routerLink]="['change', s.id]"><i class="fa-thin fa-pen-to-square" style="color: #c1c5cd;"></i>Edit</button>
-              <button class="btn btn-danger btn-sm me-2" (click)="deleteStudent(s.id)"><i class="fa-regular fa-trash" style="color: #dfd4d3;"></i>Delete</button>
+              <button class="btn btn-primary btn-sm me-2" [routerLink]="['detail', s.id]"><i class="fa-regular fa-eye" style="color: #74C0FC;"></i> View</button>
+              <button class="btn btn-warning btn-sm me-2" [routerLink]="['change', s.id]"><i class="fa-thin fa-pen-to-square" style="color: #c1c5cd;"></i> Edit</button>
+              <button class="btn btn-danger btn-sm me-2" (click)="deleteStudent(s.id)"><i class="fa-regular fa-trash" style="color: #dfd4d3;"></i> Delete</button>
             </td>
           </tr>
         </tbody>
       </table>
     </div>
-    <div class="col-2"></div>
-  </div> 
+  </div>
 </div>
-
-
-
-<!-- <div *ngFor="let s of studentsNew ;let i=index">
-  id:{{1+i}}
-    <h3>{{ s.firstName }} {{ s.lastName }}</h3>
-     <p>Email: {{ s.email }}</p> -->
-    <!-- <button [routerLink]="['detail',s.id]" >View </button>
-    <button [routerLink]="['change',s.id]" >Edit</button>
-    <button (click)="deleteStudent(s.id)">Delete</button>
-  </div> -->
-    

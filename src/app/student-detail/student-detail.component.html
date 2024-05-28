@@ -1,52 +1,45 @@
-<div class="container">
-  <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-    <!-- <button class="btn btn-primary me-md-2" type="button">Button</button> -->
-    <button class="btn btn-outline-success" type="button" [routerLink]="['']">Go back</button>
+<div class="container" *ngIf="student">
+  <div class="card mb-4" style="background-color: #f8f9fa;">
+    <div class="card-header bg-primary text-white">
+      <div class="row">
+        <div class="col">
+          <h2 class="card-title mb-0">Student Details</h2>
+        </div>
+        <div class="col text-end">
+          <button class="btn btn-outline-success" type="button" [routerLink]="['']">Go back</button>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-6">
+          <ul class="list-group list-group-flush mb-4">
+            <li class="list-group-item"><strong>First Name:</strong> {{ student.first_name }}</li>
+            <li class="list-group-item"><strong>Last Name:</strong> {{ student.last_name }}</li>
+            <li class="list-group-item"><strong>Date of Birth:</strong> {{ student.date_of_birth|date:'dd-MM-yyyy' }}</li>
+            <li class="list-group-item"><strong>Email:</strong> {{ student.email }}</li>
+          </ul>
+          <!-- {{date | date: 'ddMMyyyy'}} -->
+        </div>
+        <div class="col-md-6">
+          <ul class="list-group list-group-flush mb-4">
+            <li class="list-group-item"><strong>Address:</strong> {{ student.street }}</li>
+            <li class="list-group-item"><strong>State:</strong> {{ student.state }}</li>
+            <li class="list-group-item"><strong>City:</strong> {{ student.city }}</li>
+            <li class="list-group-item"><strong>Pincode:</strong> {{ student.pincode }}</li>
+          </ul>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-2">
+          <h3 class="mb-3">Subjects</h3>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item" *ngFor="let subject of student.subjects">
+              <span class="bullet">&#8226;</span> {{ subject }}
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="student-detail">
-    <h2 class="text-center mb-4">Student Details</h2>
-    
-    <div class="card mb-4">
-      <div class="card-header">
-        <h3 class="card-title">Personal Information</h3>
-      </div>
-      <div class="card-body">
-        <div class="row">
-          <div class="col-md-6">
-            <p><strong>First Name:</strong> {{ student.first_name }}</p>
-            <p><strong>Last Name:</strong> {{ student.last_name }}</p>
-            <p><strong>Date of Birth:</strong> {{ student.date_of_birth }}</p>
-            <p><strong>Email:</strong> {{ student.email }}</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="card mb-4">
-      <div class="card-header">
-        <h3 class="card-title">Address Information</h3>
-      </div>
-      <div class="card-body">
-        <div class="row">
-          <div class="col-md-6">
-            <p><strong>Address:</strong> {{ student.street }}</p>
-            <p><strong>State:</strong> {{ student.state }}</p>
-            <p><strong>City:</strong> {{ student.city }}</p>
-            <p><strong>Pincode:</strong> {{ student.pincode }}</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="card mb-4">
-      <div class="card-header">
-        <h3 class="card-title">Subjects</h3>
-      </div>
-      <div class="card-body">
-        <ul class="list-group">
-          <li class="list-group-item" *ngFor="let subject of student.subjects">{{ subject }}</li>
-        </ul>
-      </div>
-    </div>
-
-    
+</div>
